@@ -29,6 +29,9 @@ import com.google.common.annotations.VisibleForTesting;
 
 public class CfModelsAssert {
 
+  private CfModelsAssert() {
+  }
+
   private static final List<Function<ServiceInstance, Object>> SERVICE_INSTANCE_PROPERTIES = Arrays.asList(
       ServiceInstance::getDashboardUrl, ServiceInstance::getOrganizationGuid, ServiceInstance::getPlanId,
       ServiceInstance::getServiceDefinitionId, ServiceInstance::getServiceInstanceId, ServiceInstance::getSpaceGuid);
@@ -36,11 +39,11 @@ public class CfModelsAssert {
       ServiceInstanceBinding::getAppGuid, ServiceInstanceBinding::getCredentials, ServiceInstanceBinding::getId,
       ServiceInstanceBinding::getServiceInstanceId, ServiceInstanceBinding::getSyslogDrainUrl);
 
-  public static Matcher<? super ServiceInstance> deeplyEqualTo(ServiceInstance expectedInstance) {
+  public static Matcher<ServiceInstance> deeplyEqualTo(ServiceInstance expectedInstance) {
     return new DeepEqualityMatcher<>(expectedInstance, SERVICE_INSTANCE_PROPERTIES);
   }
 
-  public static Matcher<? super ServiceInstanceBinding> deeplyEqualTo(ServiceInstanceBinding expectedBinding) {
+  public static Matcher<ServiceInstanceBinding> deeplyEqualTo(ServiceInstanceBinding expectedBinding) {
     return new DeepEqualityMatcher<>(expectedBinding, SERVICE_BINDING_PROPERTIES);
   }
 
@@ -81,6 +84,7 @@ public class CfModelsAssert {
     }
 
     @Override
-    public void describeTo(Description description) {}
+    public void describeTo(Description description) {
+    }
   }
 }

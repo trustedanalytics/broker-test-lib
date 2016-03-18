@@ -15,8 +15,6 @@
  */
 package org.trustedanalytics.servicebroker.test.zookeeper;
 
-import java.security.MessageDigest;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -26,6 +24,7 @@ import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Id;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.hash.Hashing;
 
 public class ZooKeeperTestOperations {
 
@@ -34,9 +33,8 @@ public class ZooKeeperTestOperations {
   public static void createSecuredNode(ZooKeeperCredentials credentials, String path) throws Exception {
     CuratorFramework tempClient = getNewClient(credentials.getConnectionString());
 
-    MessageDigest md = MessageDigest.getInstance("SHA-1");
-    byte[] authDigest =
-        md.digest(String.format("%s:%s", credentials.getUsername(), credentials.getPassword()).getBytes());
+    byte[] authDigest = Hashing.sha1()
+        .hashBytes(String.format("%s:%s", credentials.getUsername(), credentials.getPassword()).getBytes()).asBytes();
     String authEncoded = new String(Base64.encodeBase64(authDigest));
     ImmutableList<ACL> acl = ImmutableList.of(
         new ACL(ZooDefs.Perms.ALL, new Id("digest", String.format("%s:%s", credentials.getUsername(), authEncoded))));

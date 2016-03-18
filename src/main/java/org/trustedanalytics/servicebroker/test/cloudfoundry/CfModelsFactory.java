@@ -28,6 +28,10 @@ import org.cloudfoundry.community.servicebroker.model.ServiceInstance;
 import org.cloudfoundry.community.servicebroker.model.ServiceInstanceBinding;
 
 public final class CfModelsFactory {
+
+  private CfModelsFactory() {
+  }
+
   public static ServiceInstance getServiceInstance() {
     String instanceId = randomId();
     return getServiceInstance(instanceId);
