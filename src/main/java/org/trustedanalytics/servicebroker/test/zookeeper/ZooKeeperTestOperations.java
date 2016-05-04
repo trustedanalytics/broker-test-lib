@@ -28,16 +28,18 @@ import com.google.common.hash.Hashing;
 
 public class ZooKeeperTestOperations {
 
+  private static final String FORMAT = "%s:%s";
+
   private ZooKeeperTestOperations() {}
 
   public static void createSecuredNode(ZooKeeperCredentials credentials, String path) throws Exception {
     CuratorFramework tempClient = getNewClient(credentials.getConnectionString());
 
     byte[] authDigest = Hashing.sha1()
-        .hashBytes(String.format("%s:%s", credentials.getUsername(), credentials.getPassword()).getBytes()).asBytes();
+        .hashBytes(String.format(FORMAT, credentials.getUsername(), credentials.getPassword()).getBytes()).asBytes();
     String authEncoded = new String(Base64.encodeBase64(authDigest));
     ImmutableList<ACL> acl = ImmutableList.of(
-        new ACL(ZooDefs.Perms.ALL, new Id("digest", String.format("%s:%s", credentials.getUsername(), authEncoded))));
+        new ACL(ZooDefs.Perms.ALL, new Id("digest", String.format(FORMAT, credentials.getUsername(), authEncoded))));
 
     tempClient.create().creatingParentsIfNeeded().withACL(acl).forPath(path);
 
@@ -54,7 +56,7 @@ public class ZooKeeperTestOperations {
   public static CuratorFramework getNewAuthorizedClient(ZooKeeperCredentials credentials) {
     CuratorFramework tempClient = CuratorFrameworkFactory.builder().connectString(credentials.getConnectionString())
         .retryPolicy(new RetryOneTime(100)).authorization("digest",
-            String.format("%s:%s", credentials.getUsername(), credentials.getPassword()).getBytes())
+            String.format(FORMAT  , credentials.getUsername(), credentials.getPassword()).getBytes())
         .build();
     tempClient.start();
     return tempClient;
