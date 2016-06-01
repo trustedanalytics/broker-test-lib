@@ -7,11 +7,11 @@
     <parent>
         <groupId>org.trustedanalytics</groupId>
         <artifactId>project-template</artifactId>
-        <version>0.4.13</version>
+        <version>0.5.0</version>
     </parent>
 
     <artifactId>broker-test-lib</artifactId>
-    <version>0.4.3</version>
+    <version>0.4.4</version>
 
     <properties>
         <brokerVersion>2.6.0</brokerVersion>
